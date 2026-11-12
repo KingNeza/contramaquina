@@ -1,0 +1,274 @@
+<html><head><meta charset="utf-8"><title>Guía de sesión: Contramáquina artificial</title><style>body,p,li,td,th,h1,h2,h3{font-family:Arial,sans-serif}body{max-width:820px;margin:24px auto;padding:0 16px}body,p,li,td,th{font-size:11pt;line-height:1.5}h1{font-size:18pt}h2{font-size:14pt;margin-top:28px}h3{font-size:12pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #999;padding:4px 6px;vertical-align:top;text-align:left}th{background:#eeeeee}pre{font-family:'Roboto Mono','Courier New',monospace;font-size:10pt;background:#f4f4f4;padding:6px;white-space:pre-wrap}code{font-family:'Roboto Mono','Courier New',monospace;font-size:10pt;background:#f4f4f4}.nota{background:#f6f6f6;border-left:3px solid #888;padding:6px 10px}</style></head><body>
+<h1>Guía de sesión: Contramáquina artificial</h1>
+<p>Comunidades virtuales en los procesos de globalización · Versión revisada, 6 de noviembre de 2026</p>
+
+<h2>1. Datos generales y propósito</h2>
+<table>
+<tr><th>Campo</th><th>Descripción</th></tr>
+<tr><td>Asignatura</td><td>Comunidades virtuales en los procesos de globalización</td></tr>
+<tr><td>Programa</td><td>Maestría en Comunicación y Humanidades Digitales, Universidad del Claustro de Sor Juana</td></tr>
+<tr><td>Proyecto</td><td>Contramáquina artificial: agentes de IA para el análisis del necrodiscurso en el Caso Narvarte</td></tr>
+<tr><td>Carácter</td><td>Proyecto colaborativo de la Maestría en Comunicación y Humanidades Digitales</td></tr>
+<tr><td>Modalidad</td><td>Sesión práctica de desarrollo asistido por IA (vibe coding)</td></tr>
+<tr><td>Duración estimada</td><td>120 minutos, más 30 minutos de instalación previa</td></tr>
+</table>
+<p>La sesión tiene por objeto poner en funcionamiento, de principio a fin, una primera versión de la célula de agentes descrita en la propuesta del alumno. El resultado esperado no es un sistema terminado, sino una estructura mínima que funcione sobre un modelo de lenguaje instalado en la propia computadora, y que se desarrollará por etapas entre noviembre de 2026 y marzo de 2027.</p>
+<p>La guía no supone conocimientos previos de programación. Cada paso indica qué escribir, qué debe aparecer en pantalla y cómo interpretarlo.</p>
+<p>La implementación se rige por tres principios metodológicos:</p>
+<ol>
+<li>El modelo de lenguaje identifica y señala fragmentos; el conteo de frecuencias lo realiza el programa de forma exacta; la interpretación corresponde al investigador.</li>
+<li>Todo hallazgo del modelo debe sustentarse en una cita textual, cuya existencia en la fuente se comprueba de forma automática.</li>
+<li>Todo el procesamiento ocurre en la computadora del investigador; el corpus no se envía a ningún servicio externo.</li>
+</ol>
+
+<h2>2. Conceptos básicos</h2>
+<p>Los siguientes términos aparecen a lo largo de la guía.</p>
+<table>
+<tr><th>Término</th><th>Qué es</th></tr>
+<tr><td>Terminal</td><td>Ventana en la que se dan instrucciones a la computadora escribiendo comandos en lugar de usar el ratón. Cada comando se ejecuta al presionar Enter.</td></tr>
+<tr><td>Visual Studio Code (VS Code)</td><td>Programa para ver y editar los archivos del proyecto. Incluye una terminal integrada, por lo que todo el trabajo se realiza en una sola ventana.</td></tr>
+<tr><td>Python</td><td>Lenguaje de programación en el que está escrita la célula. Los archivos con terminación <code>.py</code> son programas de Python.</td></tr>
+<tr><td>Librería</td><td>Conjunto de herramientas ya programadas por otras personas que el proyecto aprovecha; por ejemplo, para leer archivos PDF o generar hojas de Excel.</td></tr>
+<tr><td>Entorno virtual (<code>.venv</code>)</td><td>Carpeta aislada donde se instalan las librerías del proyecto, sin modificar el resto de la computadora. Se reconoce porque la terminal muestra <code>(.venv)</code> al inicio de la línea.</td></tr>
+<tr><td>Modelo de lenguaje</td><td>Programa entrenado con grandes volúmenes de texto que genera respuestas a partir de instrucciones. En este proyecto se usa Qwen 3, de código abierto.</td></tr>
+<tr><td>Ollama</td><td>Aplicación que descarga y ejecuta modelos de lenguaje en la propia computadora, sin conexión a servicios externos.</td></tr>
+<tr><td>Prompt</td><td>Instrucción en lenguaje natural que se le da al modelo.</td></tr>
+<tr><td>JSON</td><td>Formato de texto con campos y valores (por ejemplo, <code>"categoria": "CULPABILIZACION"</code>). Obligar al modelo a responder en este formato permite que sus respuestas se cuenten y comparen.</td></tr>
+<tr><td>YAML</td><td>Formato de texto legible para archivos de configuración. Los archivos <code>.yaml</code> del proyecto se editan como un documento de texto.</td></tr>
+<tr><td>Pipeline</td><td>Secuencia de etapas en la que el resultado de cada una alimenta a la siguiente. Aquí, la secuencia de agentes.</td></tr>
+<tr><td>Alucinación</td><td>Respuesta del modelo que parece plausible pero no tiene sustento en la fuente; por ejemplo, una cita inventada.</td></tr>
+</table>
+
+<h2>3. Los archivos del proyecto</h2>
+<p>El proyecto es una carpeta llamada <code>contramaquina</code>. Conviene conocer su contenido antes de instalar, porque durante la sesión se trabajará directamente sobre algunos de estos archivos.</p>
+<pre>contramaquina/
+├── GUIA_SESION.html       esta guía
+├── README.md              descripción breve del proyecto
+├── requirements.txt       lista de librerías que se instalan
+├── config.yaml            ajustes generales: modelo, temperatura, tamaño de fragmentos
+├── codebook.yaml          libro de códigos: las categorías de análisis
+├── pipeline.py            programa principal: ejecuta los agentes en orden
+├── llm.py                 conexión con el modelo de lenguaje
+├── fragmentos.py          divide los documentos largos en partes
+├── verificar.py           comprueba que cada cita exista en la fuente
+├── reporte.py             cuenta los hallazgos y genera las tablas
+├── simulador.py           respuestas falsas para probar sin modelo
+├── agentes/
+│   ├── decodificador.py   [01] convierte PDF, texto o audio en texto limpio
+│   ├── analista_n1.py     [02] detecta mecanismos revictimizantes (ACDF)
+│   ├── analista_n2.py     [03] relee los hallazgos desde la necropolítica
+│   └── evaluador.py       [04] asigna relevancia A o B
+├── corpus/
+│   ├── raw/               documentos originales (aquí se colocan los textos)
+│   └── clean/             texto limpio generado por el Decodificador
+├── salidas/               resultados de cada etapa y tablas de Excel
+└── validacion/
+    └── kappa.py           mide el acuerdo entre el investigador y la célula</pre>
+
+<h3>3.1 Qué archivos edita el investigador</h3>
+<table>
+<tr><th>Archivo o carpeta</th><th>Función</th><th>¿Se edita?</th></tr>
+<tr><td><code>codebook.yaml</code></td><td>Contiene las definiciones de cada categoría de análisis, con criterios de inclusión, exclusión y ejemplos. Es la operacionalización del marco teórico y forma parte de la tesis.</td><td>Sí, constantemente</td></tr>
+<tr><td><code>config.yaml</code></td><td>Nombre del modelo, temperatura y tamaño de los fragmentos.</td><td>Sí, ocasionalmente</td></tr>
+<tr><td><code>corpus/raw/</code></td><td>Carpeta donde se colocan los documentos a analizar.</td><td>Sí, se agregan archivos</td></tr>
+<tr><td><code>salidas/</code></td><td>Resultados. El archivo principal es <code>hallazgos.xlsx</code>.</td><td>No; se leen</td></tr>
+<tr><td><code>validacion/muestra_para_codificar.xlsx</code></td><td>Muestra de citas que el investigador codifica a mano para medir la fiabilidad.</td><td>Sí, se llena una columna</td></tr>
+<tr><td>Archivos <code>.py</code></td><td>El código de los agentes. Las instrucciones que recibe cada agente están al inicio de su archivo, en la sección <code>SISTEMA</code>.</td><td>Solo en etapas avanzadas</td></tr>
+</table>
+
+<h3>3.2 Correspondencia entre la propuesta y el código</h3>
+<p>La implementación conserva los cuatro agentes de la propuesta y añade dos controles: la verificación de citas y la medición del acuerdo entre codificadores. Ambos dan forma operativa a compromisos ya enunciados en la propuesta: la verificación contra fuentes originales y la supervisión activa.</p>
+<table>
+<tr><th>Etapa</th><th>Componente de la propuesta</th><th>Archivo</th><th>¿Usa el modelo de lenguaje?</th></tr>
+<tr><td>01</td><td>Decodificador</td><td><code>agentes/decodificador.py</code></td><td>No. La fidelidad al original se obtiene con herramientas de extracción de texto y transcripción (Whisper)</td></tr>
+<tr><td>02</td><td>Analista de nivel 1 (ACDF)</td><td><code>agentes/analista_n1.py</code> y <code>codebook.yaml</code></td><td>Sí, con respuesta obligatoria en JSON</td></tr>
+<tr><td>02a</td><td>Verificación contra fuentes</td><td><code>verificar.py</code></td><td>No. Busca cada cita, palabra por palabra, en el documento original</td></tr>
+<tr><td>03</td><td>Analista de nivel 2 (necropolítica)</td><td><code>agentes/analista_n2.py</code></td><td>Sí; solo procesa hallazgos verificados</td></tr>
+<tr><td>04</td><td>Evaluador A/B</td><td><code>agentes/evaluador.py</code></td><td>Sí; ordena la revisión, no elimina hallazgos</td></tr>
+<tr><td>05</td><td>Métrica de prevalencia</td><td><code>reporte.py</code></td><td>No. Cuenta por categoría, fuente y mes</td></tr>
+<tr><td>06</td><td>Supervisión activa</td><td><code>validacion/kappa.py</code></td><td>No. Calcula el coeficiente kappa de Cohen</td></tr>
+</table>
+
+<h2>4. Instalación paso a paso</h2>
+<p class="nota">Convención de esta guía: el texto en recuadro gris se escribe en la terminal tal cual y se ejecuta con Enter. Si algo no coincide con lo descrito, consulte la sección 7, Problemas frecuentes.</p>
+
+<h3>Paso 1. Instalar Ollama y descargar el modelo</h3>
+<p>Descargue Ollama desde <a href="https://ollama.com">ollama.com</a> e instálelo como cualquier aplicación. Al abrirlo aparece un ícono en la barra superior de la pantalla. Después abra la aplicación Terminal (Aplicaciones → Utilidades) y escriba:</p>
+<pre>ollama pull qwen3:14b</pre>
+<p>La descarga ocupa alrededor de 9 GB y puede tardar varios minutos. Si se interrumpe, basta con repetir el comando: continúa desde donde quedó.</p>
+<p>Criterio de selección: el modelo no debe ocupar más de la mitad de la memoria RAM del equipo (menú Apple → Acerca de esta Mac). Con 16 GB se recomienda <code>qwen3:8b</code>; con 32 GB o más, <code>qwen3:14b</code>.</p>
+
+<h3>Paso 2. Comprobar el modelo</h3>
+<pre>ollama list</pre>
+<p>Debe aparecer una línea con el nombre del modelo, por ejemplo <code>qwen3:14b</code>. Para probarlo:</p>
+<pre>ollama run qwen3:14b "Di hola en una palabra"</pre>
+<p>La primera vez puede tardar hasta dos minutos, porque el modelo se carga en memoria. Primero aparece un texto entre <code>Thinking...</code> y <code>...done thinking</code>, que es el razonamiento del modelo, y al final la respuesta. Si al terminar aparece <code>&gt;&gt;&gt;</code>, se sale escribiendo <code>/bye</code>.</p>
+
+<h3>Paso 3. Colocar el proyecto en la computadora</h3>
+<ol>
+<li>Descargue <code>contramaquina.zip</code> y haga doble clic sobre él en la carpeta Descargas. Se crea la carpeta <code>contramaquina</code>.</li>
+<li>Mueva esa carpeta a Documentos.</li>
+</ol>
+
+<h3>Paso 4. Abrir el proyecto en VS Code</h3>
+<ol>
+<li>Abra VS Code y elija File → Open Folder… (Archivo → Abrir carpeta…). Seleccione la carpeta <code>contramaquina</code>.</li>
+<li>Si el programa pregunta si confía en los autores, elija Yes, I trust the authors.</li>
+<li>Abra la terminal integrada desde el menú Terminal → New Terminal. Aparece en la parte inferior de la ventana y ya está situada dentro de la carpeta del proyecto.</li>
+</ol>
+
+<h3>Paso 5. Comprobar Python</h3>
+<pre>python3 --version</pre>
+<p>Debe aparecer un número de versión igual o superior a 3.10, por ejemplo <code>Python 3.14.5</code>.</p>
+
+<h3>Paso 6. Crear y activar el entorno virtual</h3>
+<pre>python3 -m venv .venv
+source .venv/bin/activate</pre>
+<p>El primer comando no muestra nada; es lo esperado. Tras el segundo, la línea de la terminal debe comenzar con <code>(.venv)</code>.</p>
+<p class="nota">Cada vez que se cierre VS Code y se abra una terminal nueva, debe repetirse <code>source .venv/bin/activate</code>. Sin <code>(.venv)</code> al inicio de la línea, los comandos siguientes fallan.</p>
+
+<h3>Paso 7. Instalar las librerías</h3>
+<pre>pip install -r requirements.txt</pre>
+<p>Se muestra mucho texto durante uno o dos minutos. La instalación fue correcta si las últimas líneas dicen <code>Successfully installed</code> y no aparece la palabra <code>ERROR</code>.</p>
+
+<h3>Paso 8. Verificar el nombre del modelo</h3>
+<p>Abra <code>config.yaml</code> desde la lista de archivos. La línea <code>modelo: "qwen3:14b"</code> debe coincidir exactamente con el nombre que mostró <code>ollama list</code>. Si se descargó otro modelo, corrija el nombre y guarde con Cmd + S.</p>
+
+<h3>Paso 9. Probar la conexión entre Python y el modelo</h3>
+<pre>python llm.py</pre>
+<p>En menos de un minuto debe aparecer una respuesta con dos campos:</p>
+<pre>concepto='Análisis crítico del discurso' definicion='Enfoque que estudia cómo el lenguaje...'</pre>
+<p>Este resultado confirma lo esencial: el modelo responde y respeta la estructura que se le exige. Puede ocurrir que el contenido de cada campo no sea el esperado (por ejemplo, una definición en el campo <code>concepto</code>). El modelo sigue la forma con exactitud, pero interpreta el contenido; por eso cada categoría del libro de códigos requiere instrucciones precisas.</p>
+
+<h2>5. Desarrollo de la sesión</h2>
+
+<h3>Actividad 1. Recorrido en modo simulado (10 min)</h3>
+<pre>CONTRAMAQUINA_SIMULAR=1 python pipeline.py</pre>
+<p>En este modo el programa no usa el modelo: inventa respuestas para comprobar que las etapas se comunican entre sí. Termina en segundos y muestra las etapas [01] a [05]. En la carpeta <code>salidas</code> conviene revisar dos archivos:</p>
+<ul>
+<li><code>resumen.md</code> (clic derecho → Open Preview): tablas de conteo por categoría, fuente y mes. Los números carecen de significado; interesa la forma del resultado final.</li>
+<li><code>02_descartes_alucinacion.jsonl</code>: el simulador atribuye deliberadamente a un documento la frase “Esta frase no existe en ninguna fuente del corpus”. El verificador no la encuentra en el original y la descarta. Este es el mecanismo que protege el análisis frente a las alucinaciones del modelo.</li>
+</ul>
+
+<h3>Actividad 2. Primer análisis con el modelo (20 min)</h3>
+<p>El proyecto incluye dos notas ficticias en <code>corpus/raw/</code>, redactadas para contener mecanismos reconocibles. Se usan para la primera prueba antes de incorporar documentos reales.</p>
+<pre>python pipeline.py --etapa decodificar
+python pipeline.py --etapa n1
+python pipeline.py --etapa reporte</pre>
+<p>El primer comando prepara los textos. El segundo ejecuta al Analista de nivel 1, que tarda entre 30 segundos y 2 minutos por documento. El tercero genera las tablas; debe indicar <code>(usando 02_hallazgos_n1.jsonl)</code>.</p>
+<p>Abra <code>salidas/hallazgos.xlsx</code> desde el Finder con Excel o Numbers. Cada fila es un hallazgo:</p>
+<table>
+<tr><th>Columna</th><th>Contenido</th></tr>
+<tr><td><code>categoria</code></td><td>Mecanismo que el modelo cree haber encontrado</td></tr>
+<tr><td><code>cita</code></td><td>Frase textual del documento</td></tr>
+<tr><td><code>enunciador</code></td><td>Quién la enuncia: autoridad, medio, testigo</td></tr>
+<tr><td><code>justificacion</code></td><td>Razón por la que el modelo asigna la categoría</td></tr>
+<tr><td><code>verificacion</code></td><td><code>exacta</code> si la cita aparece literalmente; <code>aproximada</code> si es casi idéntica (debe contrastarse con la columna <code>pasaje_real</code>)</td></tr>
+</table>
+<p>La lectura de esta tabla es trabajo del investigador. Las preguntas guía son: ¿la categoría asignada es correcta?, ¿hay mecanismos presentes en el texto que el modelo no detectó?, ¿alguna cita aproximada altera el sentido del original?</p>
+
+<h3>Actividad 3. Elaboración del libro de códigos (30 min)</h3>
+<p>El archivo <code>codebook.yaml</code> contiene cuatro categorías de nivel 1 y tres de nivel 2 a modo de plantilla. El alumno debe reformularlas desde su marco teórico (Gutierrez Aldrete, 2022; Missiatto, 2021; Mbembe, 2011). Cada categoría requiere una definición operativa, criterios de inclusión, criterios de exclusión y al menos un ejemplo. Preguntas orientadoras:</p>
+<ol>
+<li>¿Qué criterio distingue la criminalización de la víctima del reporte neutral de una línea de investigación?</li>
+<li>¿Qué mecanismos documentados en la literatura no están representados; por ejemplo, la desacreditación de la labor periodística o activista?</li>
+<li>¿Qué casos límite deben consignarse expresamente como exclusiones?</li>
+</ol>
+<p class="nota">El formato YAML es sensible a la sangría (los espacios al inicio de cada línea). Al editar, conviene copiar una categoría existente y modificar su contenido, conservando la misma alineación. Cada versión del libro de códigos debe guardarse con numeración (v1, v2…), ya que su evolución forma parte del registro metodológico de la tesis.</p>
+
+<h3>Actividad 4. Incorporación de documentos reales (20 min)</h3>
+<p>Se sustituyen las notas ficticias de <code>corpus/raw/</code> por dos o tres documentos del corpus real (véase la sección 8). Los archivos deben nombrarse con el formato <code>AAAA-MM-DD_fuente_descripcion</code>, por ejemplo <code>2015-08-02_eluniversal_nota.pdf</code>, porque de ese nombre el programa obtiene la fecha y la fuente. Después se repiten los comandos de la Actividad 2. Con documentos extensos conviene limitar la prueba a tres fragmentos:</p>
+<pre>python pipeline.py --etapa n1 --limite 3</pre>
+<p>Los PDF escaneados (imágenes sin texto seleccionable) quedan señalados con un aviso: requieren reconocimiento óptico de caracteres (OCR), pendiente para una fase posterior.</p>
+
+<h3>Actividad 5. Ajuste iterativo (tiempo restante)</h3>
+<p>El ajuste consiste en modificar una sola variable por vez y repetir el análisis sobre los mismos documentos, para poder atribuir cada cambio en los resultados a una causa identificable.</p>
+<table>
+<tr><th>Variable</th><th>Ubicación</th></tr>
+<tr><td>Definiciones, criterios y ejemplos</td><td><code>codebook.yaml</code></td></tr>
+<tr><td>Instrucciones generales del analista</td><td>Sección <code>SISTEMA</code> en <code>agentes/analista_n1.py</code></td></tr>
+<tr><td>Modelo de lenguaje</td><td><code>config.yaml</code>, campo <code>modelo</code></td></tr>
+<tr><td>Tamaño de los fragmentos</td><td><code>config.yaml</code>, sección <code>fragmentos</code></td></tr>
+</table>
+<p>Si el tiempo lo permite, se ejecutan las etapas restantes: <code>python pipeline.py --etapa n2</code>, luego <code>--etapa evaluar</code> y finalmente <code>--etapa reporte</code>. El reporte usa siempre el archivo de hallazgos más reciente.</p>
+
+<h2>6. Trabajo posterior y criterio de validación</h2>
+<table>
+<tr><th>Fase del cronograma</th><th>Tarea de implementación</th></tr>
+<tr><td>Delimitación del corpus y metodología ACDF</td><td>Integración del corpus (sección 8) y versión 1 del libro de códigos</td></tr>
+<tr><td>Programación del Decodificador</td><td>Incorporación de OCR para documentos escaneados; prueba de transcripción de audio con mlx-whisper</td></tr>
+<tr><td>Primera fase de prueba</td><td>Codificación manual de la muestra y cálculo del acuerdo</td></tr>
+<tr><td>Categorías ACDF y capa de necropolítica</td><td>Versión 2 del libro de códigos; ampliación del contexto que recibe el Analista de nivel 2</td></tr>
+<tr><td>Segunda fase de prueba</td><td>Comparación de al menos dos modelos con el mismo libro de códigos y nueva medición del acuerdo</td></tr>
+<tr><td>Diseño del prompt del Evaluador</td><td>Formulación de criterios propios de relevancia A/B</td></tr>
+<tr><td>Fase final</td><td>Evaluación de la necesidad de agentes adicionales; por ejemplo, uno dedicado a identificar al enunciador</td></tr>
+</table>
+
+<h3>Criterio de validación</h3>
+<p>La fiabilidad de la codificación automática se establece con el coeficiente kappa de Cohen (1960), que mide el acuerdo entre la codificación del investigador y la de la célula descontando el acuerdo que se produciría por azar:</p>
+<p style="text-align:center"><i>κ</i> = (<i>p<sub>o</sub></i> − <i>p<sub>e</sub></i>) / (1 − <i>p<sub>e</sub></i>)</p>
+<p>donde <i>p<sub>o</sub></i> es la proporción de acuerdo observado y <i>p<sub>e</sub></i> la proporción de acuerdo esperado por azar. Procedimiento:</p>
+<ol>
+<li>Cada ejecución del reporte genera <code>validacion/muestra_para_codificar.xlsx</code>, con hasta 30 citas al azar y sin la categoría asignada por el modelo, para no influir en el juicio del investigador.</li>
+<li>El investigador abre el archivo en Excel, escribe en la columna <code>categoria_humana</code> el identificador de la categoría que corresponde a cada cita (por ejemplo, <code>CULPABILIZACION</code>) o <code>NINGUNA</code> si la cita no debió marcarse, y guarda.</li>
+<li>En la terminal se ejecuta <code>python validacion/kappa.py</code>, que muestra el acuerdo simple, el coeficiente kappa y una tabla de coincidencias y discrepancias.</li>
+</ol>
+<p>Se propone como umbral un kappa igual o superior a 0.61, que corresponde a un acuerdo sustancial según Landis y Koch (1977), antes de procesar el corpus completo. El registro de este coeficiente en cada versión del libro de códigos documenta la fiabilidad del instrumento ante el comité de tesis.</p>
+<p class="nota">La muestra se regenera cada vez que se ejecuta el reporte. Antes de codificarla, conviene guardar una copia con otro nombre para no perder el trabajo.</p>
+
+<h2>7. Problemas frecuentes</h2>
+<table>
+<tr><th>Síntoma</th><th>Causa</th><th>Solución</th></tr>
+<tr><td><code>command not found: ollama</code></td><td>Ollama no está instalado</td><td>Instalarlo desde ollama.com (Paso 1)</td></tr>
+<tr><td>Error de conexión al usar <code>ollama</code> o <code>python llm.py</code></td><td>La aplicación Ollama no está abierta</td><td>Abrir Ollama desde Aplicaciones</td></tr>
+<tr><td>La terminal no muestra <code>(.venv)</code>, o aparece <code>No module named ...</code></td><td>El entorno virtual no está activado</td><td><code>source .venv/bin/activate</code></td></tr>
+<tr><td>El programa parece detenido y no muestra nada</td><td>Primera carga del modelo en memoria</td><td>Esperar hasta dos minutos. En una segunda terminal (botón + del panel), <code>ollama ps</code> muestra si el modelo está cargado</td></tr>
+<tr><td>Al presionar Ctrl + C aparece un texto largo que termina en <code>KeyboardInterrupt</code></td><td>No es un error: es el aviso de que el usuario interrumpió el programa</td><td>Ninguna</td></tr>
+<tr><td>El modelo nunca termina de responder</td><td>El modelo entra en un ciclo y repite la misma palabra; ocurre cuando se le pide algo que desconoce con temperatura 0</td><td>Mantener <code>temperatura: 0.2</code> en <code>config.yaml</code>. El código limita además la longitud máxima de cada respuesta</td></tr>
+<tr><td><code>respuesta inválida, reintentando</code></td><td>El modelo devolvió una estructura incompleta</td><td>El programa reintenta solo. Si es persistente, reducir el tamaño de los fragmentos en <code>config.yaml</code></td></tr>
+<tr><td>Error al leer <code>codebook.yaml</code> (<code>ParserError</code>)</td><td>Sangría incorrecta o comillas dentro de una lista</td><td>Revisar la línea indicada en el mensaje y comparar su alineación con las demás</td></tr>
+<tr><td>El reporte muestra resultados de una prueba anterior</td><td>El reporte usa el archivo de hallazgos más reciente</td><td>Volver a ejecutar la etapa deseada antes del reporte</td></tr>
+</table>
+
+<h2>8. Constitución del corpus</h2>
+<p>La carpeta de investigación del Caso Narvarte no es de acceso público. Desde 2015 la autoridad ministerial la mantuvo en reserva, y el acceso ha correspondido a las familias y a su representación legal; Artículo 19 la consultó en su calidad de representante de Rubén Espinosa. Las piezas que circularon públicamente en 2015, entre ellas declaraciones de testigos y primeras actuaciones ministeriales, lo hicieron mediante filtraciones atribuidas a servidores públicos de la entonces Procuraduría, que fueron objeto de sanción y de un juicio de amparo promovido por la familia de Rubén Espinosa.</p>
+<p>Esta restricción no compromete el objeto de estudio. El necrodiscurso se manifiesta en los enunciados públicos de autoridades y medios, no en el expediente; en consecuencia, el corpus pertinente está integrado por fuentes de acceso público.</p>
+<table>
+<tr><th>Fuente</th><th>Aporte al análisis</th><th>Acceso</th></tr>
+<tr><td>Comunicados y conferencias de la PGJDF (julio a septiembre de 2015)</td><td>Construcción de la narrativa oficial</td><td>Hemerotecas; archivo histórico de Wayback Machine</td></tr>
+<tr><td>Notas de prensa que reprodujeron la versión oficial y las filtraciones</td><td>Amplificación mediática de la estigmatización</td><td>El Universal, La Jornada, Milenio, El Financiero, Animal Político, entre otros</td></tr>
+<tr><td><a href="https://cdhcm.org.mx/wp-content/uploads/2017/06/Boletin892017.pdf">Recomendación 4/2017 de la CDHDF</a></td><td>Documenta la difusión de una explicación del crimen sin sustento y la estigmatización de Mile Virginia Martín</td><td>Sitio de la CDHCM</td></tr>
+<tr><td><a href="https://articulo19.org/wp-content/uploads/2019/07/A19-La_verdad_como_exquisitez-04-v3-WEB.pdf">El caso Narvarte, la verdad como «exquisitez»</a> (Artículo 19, 2019)</td><td>Investigación periodística de Sara Pantoja con acceso a la carpeta</td><td>PDF en articulo19.org</td></tr>
+<tr><td><a href="https://articulo19.org/wp-content/uploads/2017/07/ESTATUS-PROCESAL-DEL-CASO-NARVARTE.pdf">Estatus procesal del Caso Narvarte</a> (Artículo 19, 2017)</td><td>Cronología jurídica y referencias procesales</td><td>PDF en articulo19.org</td></tr>
+<tr><td><a href="https://casonarvarte.articulo19.org/?p=519">Plataforma de memoria del Caso Narvarte</a></td><td>Podcasts y materiales de memoria; insumo para la prueba de transcripción</td><td>casonarvarte.articulo19.org</td></tr>
+<tr><td>Conferencias de Artículo 19 y de las familias (2022 en adelante)</td><td>Contranarrativa</td><td>Prensa y cuentas institucionales</td></tr>
+<tr><td>A plena luz: El caso Narvarte (Netflix, 2022)</td><td>Documental elaborado a partir de la revisión del expediente</td><td>Netflix; uso de citas conforme a derechos de autor</td></tr>
+</table>
+<p>Vías para ampliar el corpus:</p>
+<ol>
+<li>Contacto con Artículo 19, en su calidad de coadyuvante, para solicitar orientación sobre documentos públicos o versiones testadas.</li>
+<li>Solicitud de acceso a la información a la Fiscalía General de Justicia de la Ciudad de México, requiriendo la versión pública de boletines y comunicados de 2015 relativos al caso. Una eventual negativa constituye, en sí misma, un dato pertinente para la investigación.</li>
+<li>Solicitud de las versiones públicas de las sentencias de las personas condenadas ante el Poder Judicial de la Ciudad de México.</li>
+</ol>
+
+<h2>9. Consideraciones éticas</h2>
+<p>Las filtraciones de 2015 incluyeron fotografías y datos de la vida privada de las víctimas. La circulación previa de ese material no lo vuelve apto para su reproducción. La célula se limita al análisis de los enunciados de autoridades y medios: no recolecta ni almacena imágenes de las víctimas ni datos personales ajenos a las citas analizadas.</p>
+<p>El procesamiento local responde a la misma consideración, ya que evita la transmisión del corpus a servicios externos. Las dos notas de prueba incluidas en el proyecto son ficticias y no deben citarse como parte del corpus.</p>
+
+<h2>Referencias</h2>
+<p>Cohen, J. (1960). A coefficient of agreement for nominal scales. <i>Educational and Psychological Measurement, 20</i>(1), 37–46.</p>
+<p>Landis, J. R. y Koch, G. G. (1977). The measurement of observer agreement for categorical data. <i>Biometrics, 33</i>(1), 159–174.</p>
+<p>Mbembe, A. (2011). <i>Necropolítica</i>. Melusina.</p>
+<p>Gutierrez Aldrete (2022) y Missiatto (2021): referencias completas a consignar conforme a la bibliografía de la propuesta del alumno.</p>
+<h3>Fuentes documentales consultadas</h3>
+<ul>
+<li><a href="https://cdhcm.org.mx/wp-content/uploads/2017/06/Boletin892017.pdf">Comisión de Derechos Humanos del Distrito Federal, Boletín 89/2017: Recomendación 4/2017 sobre el Caso Narvarte</a></li>
+<li><a href="https://articulo19.org/wp-content/uploads/2019/07/A19-La_verdad_como_exquisitez-04-v3-WEB.pdf">Artículo 19 (2019). El caso Narvarte, la verdad como «exquisitez»</a></li>
+<li><a href="https://articulo19.org/wp-content/uploads/2017/07/ESTATUS-PROCESAL-DEL-CASO-NARVARTE.pdf">Artículo 19 (2017). Caso Narvarte: a dos años. Estatus procesal</a></li>
+<li><a href="https://casonarvarte.articulo19.org/?p=519">Artículo 19. Plataforma de memoria del Caso Narvarte</a></li>
+<li><a href="https://grupoanimal.mx/noticias/caso-narvarte-multihomicidio">Animal Político (2018). Caso Narvarte: tres años después</a></li>
+<li><a href="https://www.elfinanciero.com.mx/nacional/pgjdf-se-autoinvestiga-por-filtrar-expedientes/">El Financiero (2015). PGJDF se autoinvestiga por filtrar expedientes</a></li>
+<li><a href="https://www.elfinanciero.com.mx/nacional/familia-de-espinosa-se-ampara-por-filtraciones-de-la-pgjdf/">El Financiero (2015). Familia de Espinosa se ampara por filtraciones de la PGJDF</a></li>
+<li><a href="https://www.elsiglodetorreon.com.mx/noticia/2015/reservaran-datos-de-victimas-del-caso-narvarte.html">El Siglo de Torreón (2015). Reservarán datos de víctimas del caso Narvarte</a></li>
+</ul>
+</body></html>

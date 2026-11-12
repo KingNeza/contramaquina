@@ -1,0 +1,14 @@
+ollama>=0.5
+pydantic>=2.7
+pyyaml
+pandas
+tabulate        # para las tablas markdown del reporte
+pypdf
+openpyxl        # para exportar los resultados a Excel
+requests        # para descargar comunicados (descargar_corpus.py)
+trafilatura     # extrae el cuerpo de una página web sin menús ni pies
+
+# Opcional (audio / video). En Mac Apple Silicon:
+# mlx-whisper
+# En otros equipos:
+# faster-whisper

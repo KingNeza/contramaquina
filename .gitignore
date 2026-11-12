@@ -1,0 +1,15 @@
+# Entorno y caché
+.venv/
+__pycache__/
+.DS_Store
+# Resultados generados (se reproducen con el pipeline)
+salidas/*
+!salidas/.gitkeep
+corpus/clean/*
+!corpus/clean/.gitkeep
+validacion/muestra_*
+# Corpus descargado: se obtiene con descargar_corpus.py (contiene nombres de víctimas)
+corpus/raw/*
+!corpus/raw/*ficti*
+corpus/ejemplos_ficticios/
+corpus/fuentes.csv

@@ -1,0 +1,80 @@
+# LIBRO DE CÓDIGOS — PLANTILLA
+# Este archivo es teoría convertida en instrucciones. Es parte de la tesis, no del código.
+# Las categorías de abajo son PUNTO DE PARTIDA para la sesión: el alumno debe
+# redefinirlas desde su marco (ACDF, Gutiérrez Aldrete 2022; Missiatto 2021; Mbembe).
+#
+# Cada categoría necesita:
+#   - definicion: qué es, en una o dos frases operativas
+#   - incluye: rasgos que SÍ cuentan
+#   - excluye: casos frontera que NO cuentan (esto es lo que más mejora al modelo)
+#   - ejemplos: frases inventadas o de corpus ya verificado
+
+nivel_1:   # Analista N1 — mecanismos discursivos revictimizantes (ACDF)
+  - id: CULPABILIZACION
+    nombre: Culpabilización de la víctima
+    definicion: >
+      El enunciado atribuye a la víctima responsabilidad, total o parcial,
+      por la violencia que sufrió.
+    incluye:
+      - Sugerir que "se lo buscó" por su conducta, compañías o lugar donde estaba
+      - Presentar su comportamiento previo como causa explicativa del crimen
+    excluye:
+      - Descripción neutral de hechos verificados sin juicio causal
+    ejemplos:
+      - "La víctima frecuentaba ambientes de riesgo, lo que la expuso a..."
+
+  - id: ESTIGMA_MORAL
+    nombre: Estigmatización moral o sexual
+    definicion: >
+      Se resaltan rasgos de vida privada, sexualidad, consumo, ocupación o
+      nacionalidad de la víctima para desacreditarla.
+    incluye:
+      - Énfasis en vida nocturna, fiestas, drogas, trabajo sexual
+      - Adjetivos que juzgan moralmente a la víctima
+    excluye:
+      - Datos biográficos sin carga valorativa (edad, profesión mencionada neutralmente)
+    ejemplos:
+      - "La joven, de origen extranjero, era conocida en el ambiente de la noche..."
+
+  - id: CRIMINALIZACION
+    nombre: Criminalización / desplazamiento del móvil
+    definicion: >
+      La víctima es convertida en sospechosa o vinculada a actividades
+      delictivas, desplazando otras líneas de investigación.
+    incluye:
+      - Vincularla a narcotráfico, trata, ajuste de cuentas sin prueba presentada
+      - Presentar el crimen como consecuencia de un ilícito de la víctima
+    excluye:
+      - Reporte de que una autoridad investiga una línea, si se presenta como hipótesis abierta y sin juicio
+    ejemplos:
+      - "Se investiga si la víctima transportaba sustancias ilícitas..."
+
+  - id: DESPERSONALIZACION
+    nombre: Despersonalización / borrado de agencia
+    definicion: >
+      La víctima aparece sin nombre, reducida a cuerpo, número u objeto,
+      o se omite su trayectoria (por ejemplo, su labor periodística o activista).
+    incluye:
+      - 'Referirse a ella como "los cuerpos", "las occisas" o "una de las mujeres" como forma principal'
+      - Omitir el contexto de amenazas o activismo al describir a la víctima
+    excluye:
+      - Lenguaje forense técnico dentro de un peritaje
+    ejemplos:
+      - "Fueron halladas cinco personas sin vida, cuatro de ellas mujeres."
+
+nivel_2:   # Analista N2 — necropolítica / necrodiscurso (Mbembe)
+  - id: CUERPO_DESECHABLE
+    nombre: Producción de cuerpos desechables
+    definicion: >
+      El discurso presenta ciertas vidas como prescindibles o su muerte como
+      esperable, normalizando la violencia.
+  - id: GESTION_DEL_DUELO
+    nombre: Administración estatal de la verdad y el duelo
+    definicion: >
+      La autoridad controla qué versión de la muerte es pública, cierra
+      líneas de investigación o niega el carácter político del crimen.
+  - id: SOBERANIA_SOBRE_LA_MUERTE
+    nombre: Soberanía sobre la muerte / impunidad
+    definicion: >
+      El discurso exhibe o reproduce el poder de decidir quién puede morir
+      sin consecuencias (impunidad, encubrimiento, protección de actores).

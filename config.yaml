@@ -1,0 +1,18 @@
+# Configuración de la célula. Todo lo que se "tunea" vive aquí, no en el código.
+
+modelo: "qwen3:14b"          # alternativas: gemma3:12b, qwen3:30b-a3b (si hay ≥32 GB RAM)
+temperatura: 0.2             # baja = respuestas estables. En 0 el modelo puede ciclarse
+desactivar_razonamiento: true  # para modelos con "thinking" (qwen3); acelera y limpia el JSON
+
+fragmentos:
+  max_caracteres: 2500       # tamaño de cada fragmento enviado al modelo
+  solapamiento: 300          # caracteres compartidos entre fragmentos vecinos
+
+rutas:
+  crudo: "corpus/raw"
+  limpio: "corpus/clean"
+  salidas: "salidas"
+  codebook: "codebook.yaml"
+
+verificacion:
+  umbral_aproximada: 0.90    # similitud mínima para aceptar una cita "casi literal"
