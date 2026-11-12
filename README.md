@@ -1,5 +1,21 @@
 # Contramáquina artificial
 
+> **English summary.** A small team of local LLM agents (Ollama) that supports discourse analysis of official communications on the Narvarte case. A collaborative project of the MA in Digital Communication and Humanities, Universidad del Claustro de Sor Juana (Mexico City).
+>
+> **How it works**
+> 1. A decoder (no LLM) splits the source documents into fragments.
+> 2. A first analyst agent codes each fragment and returns structured JSON.
+> 3. Every quotation the model gives is checked against the source text; claims with quotes that do not match are discarded as hallucinations.
+> 4. A second analyst agent adds an interpretive reading, and an evaluator agent prioritizes findings for human review. It never deletes them.
+> 5. Python (pandas) does the counting and builds the report; Cohen's kappa measures agreement between human coders and the agents.
+>
+> **Design principles:** the LLM flags, Python counts, the person interprets. Everything runs locally, so the corpus never leaves the machine. The two documents in `corpus/raw/` are fictitious test files.
+>
+> The documentation below is in Spanish.
+
+---
+
+
 Célula de agentes locales (Ollama) para el análisis del necrodiscurso en el Caso Narvarte.
 Proyecto colaborativo de la Maestría en Comunicación y Humanidades Digitales · Universidad del Claustro de Sor Juana.
 
